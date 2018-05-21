@@ -7,6 +7,7 @@ android:
   - extra-android-m2repository
   - extra-android-support
 before_install:
+- chmod +x gradlew
 - openssl aes-256-cbc -K $encrypted_b67b11467c09_key -iv $encrypted_b67b11467c09_iv
   -in sign.jks.enc -out sign/sign.jks -d
 - gem install fir-cli
@@ -15,8 +16,7 @@ script:
 notifications:
   webhooks: https://hook.bearychat.com/=bwA9F/travis/845f7e0798a8a3c7eec6553d05276ffd
 after_deploy:
-- fir p app/build/outputs/apk/release/app-release.apk -T $FIR_TOKEN -c "`git cat-file
-  tag $TRAVIS_TAG`"
+- fir p app/build/outputs/apk/release/app-release.apk -T $FIR_TOKEN -c "`git cat-file tag $TRAVIS_TAG`"
 deploy:
   provider: releases
   api_key:
