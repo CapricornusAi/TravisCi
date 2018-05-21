@@ -7,14 +7,23 @@ android:
   - extra-android-m2repository
   - extra-android-support
 before_install:
-- chmod +x gradlew
+- openssl aes-256-cbc -K $encrypted_b67b11467c09_key -iv $encrypted_b67b11467c09_iv
+  -in sign.jks.enc -out sign/sign.jks -d
+- gem install fir-cli
 script:
 - "./gradlew assembleRelease"
 notifications:
   webhooks: https://hook.bearychat.com/=bwA9F/travis/845f7e0798a8a3c7eec6553d05276ffd
-
-
-before_install:
-- gem install fir-cli
 after_deploy:
-- fir p app/build/outputs/apk/release/app-release.apk -T $FIR_TOKEN -c "`git cat-file tag $TRAVIS_TAG`"
+- fir p app/build/outputs/apk/release/app-release.apk -T $FIR_TOKEN -c "`git cat-file
+  tag $TRAVIS_TAG`"
+deploy:
+  provider: releases
+  api_key:
+    secure: cPC6BXgSN/+rVQCX3cPxAnz4z7ab+NrSdJ1cU6IRXE5DSrZU0zyIgDeCL7jpNiDqpxO1OClRBiZPEnEecXayg/kqDCHkYS5nqtGYrt5KdSQHrGjUtB8iXics6xP06o5uXj3fmVE81bf36Sheq7vRBqKEnDDoxrcZym8aI69Dghe4JGCR3Keu86kiJSvweYds+jR+c9POFJZkmBuPZpJ9jBXvnVa1NvQ4XPvJzEQ3i4Z7CmzjBVfyJfbUDnWM+N6XnvoCYnh3FtOpvkS6My5FdttUpvSl3r4QeAk3cBGPOasfRnaA9CTtv2UXuYccqFamRPH8D1fhXZf8d3UC/xeWCyRRsb4Se2D3gw8vMLnRSAXavdlwkJm1//UNy1wWiLcc01nfaURlW/4NiSrr16nOJcz3Cp8dY2pgTALt/u7qdAOiDNaMorZv+gceL2t4v+BbXqN6VQHGptDdnC2un9LRBgcrVZvcEkuG+AhxWXyHuee5Ae7GyVauELgMLApEKXWzGfAOBgGUEtsaBepSGXRZfgRECf4xZY2sZ0DoPYYbjheFDkSq1xvaLCbM+h5mzDC9myb15xyhW4h9ZCLj+KdRax+9FLoSIdYtUpE9Yxc37+QUA4Jo/fp4YQUn0SzlfIwPt1SDtGBSdzd9qvmhe6XESie9IT/9K6n1YF6lEG+da/Y=
+  file: app/build/outputs/apk/release/app-release.apk
+  skip_cleanup: true
+  on:
+    repo: CapricornusAi/TravisCi
+    tags: true
+    all_branches: true
