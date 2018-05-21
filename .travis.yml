@@ -1,0 +1,20 @@
+language: android
+android:
+  components:
+  - tools
+  - build-tools-27.0.3
+  - android-27
+  - extra-android-m2repository
+  - extra-android-support
+before_install:
+- chmod +x gradlew
+script:
+- "./gradlew assembleRelease"
+notifications:
+  webhooks: https://hook.bearychat.com/=bwA9F/travis/845f7e0798a8a3c7eec6553d05276ffd
+
+
+before_install:
+- gem install fir-cli
+after_deploy:
+- fir p app/build/outputs/apk/release/app-release.apk -T $FIR_TOKEN -c "`git cat-file tag $TRAVIS_TAG`"
